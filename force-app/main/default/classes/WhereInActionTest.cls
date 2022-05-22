@@ -29,7 +29,7 @@ public with sharing class WhereInActionTest {
         // instantiate new invocable class and set params
         List<WhereInAction.Requests> requestList = new List<WhereInAction.Requests>();
         WhereInAction.Requests req = new WhereInAction.Requests();
-        req.lookupReference = 'AccountId';
+        req.lookupReferenceApiName = 'AccountId';
         req.objectApiName = 'Case';
         req.requestCollection = acctList;
         requestList.add(req);
