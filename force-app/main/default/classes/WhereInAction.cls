@@ -8,10 +8,16 @@ public with sharing class WhereInAction {
             Results results = new Results();
             
             List<SObject> collection = curRequest.requestCollection;
+            String queryFields;
+            if (curRequest.queryFields == null || curRequest.queryFields == '') { 
+                queryFields = 'Id'; 
+            } else {
+                queryFields = curRequest.queryFields;
+            }
             String lookupReferenceApiName = curRequest.lookupReferenceApiName;
             String objectApiName = curRequest.objectApiName;
 
-            String soqlQuery = 'SELECT Id FROM ' + objectApiName + ' WHERE ' + lookupReferenceApiName + ' IN :collection';
+            String soqlQuery = 'SELECT ' + queryFields + ' FROM ' + objectApiName + ' WHERE ' + lookupReferenceApiName + ' IN :collection';
             List<SObject> queryResult = Database.query(soqlQuery);
             if (queryResult.size() > 0) {
                 results.resultsList = queryResult;
@@ -24,6 +30,9 @@ public with sharing class WhereInAction {
     public class Requests {
         @InvocableVariable(label='Record Collection Input' description='Record Collection variable you are using to find related records. E.g. WHERE [...] IN {!Get_Accounts}' required=true)
         public List<SObject> requestCollection;
+
+        @InvocableVariable(label='Fields to Query (comma-separated) [E.g. Id, Status, My_Custom_Field__c' description='Comma-separated list of fields to query. E.g. SELECT Id, Status, MyCustomField__c [...]')
+        public String queryFields;
 
         @InvocableVariable(label='Object API Name to Query' description='API name of the object you are querying against. E.g. SELECT [...] FROM Case [...]' required=true)
         public String objectApiName;
